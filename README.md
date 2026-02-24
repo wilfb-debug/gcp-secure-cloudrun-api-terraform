@@ -103,6 +103,43 @@ curl -i "$URL/health"
 ```md
 ## Evidence (screenshots)
 
+
+## Terraform Drift & Cross-Project IAM Fix
+
+### Terraform Drift Detected (1 to change)
+
+![Terraform Drift](docs/screenshots/11-terraform-plan-drift.png)
+
+---
+
+### Permission Denied (Artifact Registry Cross-Project)
+
+![Permission Denied](docs/screenshots/15-terraform-apply-permission-denied.png)
+
+---
+
+### IAM Binding Added (Artifact Registry Reader)
+
+![IAM Binding Added](docs/screenshots/17-artifact-registry-iam-binding-success.png)
+
+---
+
+### Terraform Apply Successful
+
+![Terraform Apply Clean](docs/screenshots/18-terraform-apply-clean.png)
+
+---
+
+### Terraform State Verified (Zero Drift)
+
+![Terraform Plan Clean](docs/screenshots/19-terraform-plan-zero-drift.png)
+
+---
+
+### Final Service URL Output
+
+![Cloud Run URL](docs/screenshots/20-cloudrun-service-url.png)
+
 All screenshots live in: `docs/screenshots/`
 
 1. **404 before fix**
