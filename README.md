@@ -103,60 +103,38 @@ curl -i "$URL/health"
 ```md
 ## Evidence (screenshots)
 
+### 1) 404 before fix
+![404 before fix](docs/screenshots/01-404-error-before-fix.png)
 
-## Terraform Drift & Cross-Project IAM Fix
+### 2) Wrong gcloud project context
+![Wrong gcloud project context](docs/screenshots/02-wrong-gcloud-project-context.png)
 
-### Terraform Drift Detected (1 to change)
+### 3) No Cloud Run services in tf project
+![No services in tf project](docs/screenshots/03-no-services-in-tf-project.png)
 
-![Terraform Drift](docs/screenshots/11-terraform-plan-drift.png)
+### 4) Correct project context
+![Correct project context](docs/screenshots/04-correct-project-context.png)
 
----
+### 5) Successful Cloud Run deploy
+![Successful Cloud Run deploy](docs/screenshots/05-successful-cloudrun-deploy.png)
 
-### Permission Denied (Artifact Registry Cross-Project)
+### 6) Root endpoint 200
+![Root endpoint 200](docs/screenshots/06-root-endpoint-200.png)
 
-![Permission Denied](docs/screenshots/15-terraform-apply-permission-denied.png)
+### 7) Cloud Run service overview
+![Cloud Run service overview](docs/screenshots/08-cloudrun-service-overview.png)
 
----
+### 8) Cloud Run revision traffic
+![Cloud Run revision traffic](docs/screenshots/09-cloudrun-revision-traffic.png)
 
-### IAM Binding Added (Artifact Registry Reader)
+### 9) Cloud Build success
+![Cloud Build success](docs/screenshots/10-cloudbuild-success.png)
 
-![IAM Binding Added](docs/screenshots/17-artifact-registry-iam-binding-success.png)
+### 10) Artifact Registry IAM binding success
+![Artifact Registry IAM binding success](docs/screenshots/17-artifact-registry-iam-binding-success.png)
 
----
+### 11) Terraform apply clean
+![Terraform apply clean](docs/screenshots/18-terraform-apply-clean.png)
 
-### Terraform Apply Successful
-
-![Terraform Apply Clean](docs/screenshots/18-terraform-apply-clean.png)
-
----
-
-### Terraform State Verified (Zero Drift)
-
-![Terraform Plan Clean](docs/screenshots/19-terraform-plan-zero-drift.png)
-
----
-
-### Final Service URL Output
-
-![Cloud Run URL](docs/screenshots/20-cloudrun-service-url.png)
-
-All screenshots live in: `docs/screenshots/`
-
-1. **404 before fix**
-   - File: `docs/screenshots/01-404-before-fix.png`
-
-2. **Project mismatch (wrong gcloud project / wrong context)**
-   - File: `docs/screenshots/02-project-mismatch.png`
-
-3. **Correct project selected in Cloud Console (`gcp-secure-cloudrun-api-tf`)**
-   - File: `docs/screenshots/03-correct-project-console.png`
-
-4. **Success (HTTP 200)**
-   - File: `docs/screenshots/04-success-curl-200.png`
-
-### Preview (renders in GitHub)
-
-![404 before fix](docs/screenshots/01-404-before-fix.png)
-![Project mismatch](docs/screenshots/02-project-mismatch.png)
-![Correct project](docs/screenshots/03-correct-project-console.png)
-![Success curl 200](docs/screenshots/04-success-curl-200.png)
+### 12) Terraform plan zero drift
+![Terraform plan zero drift](docs/screenshots/19-terraform-plan-zero-drift.png)
