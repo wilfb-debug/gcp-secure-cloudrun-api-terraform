@@ -17,7 +17,7 @@ It demonstrates:
 - Terraform drift validation
 - Secure image deployment practices
 
---
+---
 
 ## What I built
 A secure containerized Flask API deployed on **Cloud Run** and managed with **Terraform**.  
