@@ -6,6 +6,19 @@ Infrastructure managed with Terraform.
 
 ---
 
+## Why This Project Matters
+
+This project simulates a real-world production issue in a multi-project GCP environment.
+
+It demonstrates:
+- Understanding of GCP project boundaries
+- Cross-project IAM troubleshooting
+- Cloud Run runtime identity behavior
+- Terraform drift validation
+- Secure image deployment practices
+
+--
+
 ## What I built
 A secure containerized Flask API deployed on **Cloud Run** and managed with **Terraform**.  
 Images are built/pushed via **Cloud Build** into **Artifact Registry**.  
@@ -93,34 +106,58 @@ curl returned HTTP 200.
 
 # Debugging Incident 2 — Artifact Registry Permission Denied
 
-## Problem
-terraform apply failed with:
-artifactregistry.repositories.downloadArtifacts denied
+Symptom:
+Terraform apply failed with:
+DENIED: artifactregistry.repositories.downloadArtifacts
 
-## Root Cause
-Cloud Run runtime service agent lacked read permission on Artifact Registry repository in image project.
+Analysis:
+Cloud Run runtime uses a Google-managed service agent identity.
+This service agent did not have permission to pull the container image
+from the Artifact Registry repository located in a different GCP project.
 
-## Fix
-
-DEPLOY_PROJECT="gcp-secure-cloudrun-api"
-PROJECT_NUM=$(gcloud projects describe "$DEPLOY_PROJECT" --format="value(projectNumber)")
-SA="service-${PROJECT_NUM}@serverless-robot-prod.iam.gserviceaccount.com"
-
-gcloud artifacts repositories add-iam-policy-binding cloud-run-source-deploy \
-  --project gcp-secure-cloudrun-api-tf \
-  --location europe-west2 \
-  --member "serviceAccount:${SA}" \
-  --role "roles/artifactregistry.reader"
-
-Re-run:
-terraform apply
+Resolution:
+Granted repository-level IAM binding:
+roles/artifactregistry.reader
+to the Cloud Run service agent.
 
 Result:
-Apply complete! Resources: 0 added, 0 changed, 0 destroyed.
+Terraform apply completed successfully.
+Service deployed and returned HTTP 200.
+
+---
+
+## Terraform Drift Validation
+
+After resolving the IAM issue, Terraform was re-run.
+
+terraform plan returned:
+Resources: 0 added, 0 changed, 0 destroyed.
+
+This confirms infrastructure state matches configuration and no manual console drift exists.
+
+---
+
+## Security Decisions
+
+- Cloud Run ingress restricted (no public open deployment without verification)
+- Explicit service account usage
+- Repository-level IAM binding instead of overly broad project-level access
+- Terraform used to maintain reproducible, auditable infrastructure state
+
+--- 
+
+## Future Improvements
+
+- Add CI/CD pipeline trigger (GitHub → Cloud Build)
+- Add IAM least-privilege policy refinement
+- Add monitoring + alerting via Cloud Monitoring
+- Add automated integration test after deployment
+- Add private ingress + VPC connector for internal-only service
 
 ---
 
 ## Reproduce (high level)
+
 ### Prereqs
 - gcloud authenticated
 - Terraform installed
@@ -142,19 +179,24 @@ curl -i "$URL/health"
 
 ---
 
-## Key commands used during investigation
+## Operational Validation & Investigation Commands
 
-# Inspect service + revision + image
-gcloud run services describe sentinal-api --region europe-west2 --format="yaml(status.url,status.latestReadyRevisionName)"
-gcloud run revisions describe <REVISION> --region europe-west2 --format="yaml(spec.containers[0].image)"
+The following commands were used to inspect runtime state, validate deployment, and diagnose IAM and image resolution issues.
 
-# Logs (if needed)
-gcloud run services logs read sentinal-api --region europe-west2 --limit 50
+# Confirm active project
+gcloud config get-value project
 
-# Artifact Registry repos
-gcloud artifacts repositories list --project <PROJECT_ID> --location europe-west2
+# Inspect deployed service and revision
+gcloud run services describe sentinal-api \
+  --region europe-west2 \
+  --format="yaml(status.url,status.latestReadyRevisionName)"
 
-# Terraform drift check
+# Inspect container image being used
+gcloud run revisions describe <REVISION> \
+  --region europe-west2 \
+  --format="yaml(spec.containers[0].image)"
+
+# Validate Terraform state alignment
 terraform plan
 
 ---
