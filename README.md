@@ -78,6 +78,13 @@ Images are built/pushed via **Cloud Build** into **Artifact Registry**.
 - Cross-project Artifact Registry access controlled via IAM binding
 - No public unauthenticated access
 
+## Security Decisions
+
+- Cloud Run ingress restricted (no public open deployment without verification)
+- Explicit service account usage
+- Repository-level IAM binding instead of overly broad project-level access
+- Terraform used to maintain reproducible, auditable infrastructure state
+
 ---
 
 ## Incidents & Fixes
@@ -160,16 +167,6 @@ terraform plan
 
 ---
 
-## Future Improvements
-
-- Add CI/CD pipeline trigger (GitHub → Cloud Build)
-- Add IAM least-privilege policy refinement
-- Add monitoring + alerting via Cloud Monitoring
-- Add automated integration test after deployment
-- Add private ingress + VPC connector for internal-only service
-
----
-
 ## Screenshots
 
 ### 404 Before Fix
@@ -209,14 +206,15 @@ docs/screenshots/
 
 ---
 
-## Security Decisions
+## Future Improvements
 
-- Cloud Run ingress restricted (no public open deployment without verification)
-- Explicit service account usage
-- Repository-level IAM binding instead of overly broad project-level access
-- Terraform used to maintain reproducible, auditable infrastructure state
+- Add CI/CD pipeline trigger (GitHub → Cloud Build)
+- Add IAM least-privilege policy refinement
+- Add monitoring + alerting via Cloud Monitoring
+- Add automated integration test after deployment
+- Add private ingress + VPC connector for internal-only service
 
---- 
+---
 
 ## Reproduce (high level)
 
@@ -238,5 +236,3 @@ echo "$URL"
 # Verify endpoints
 curl -i "$URL/"
 curl -i "$URL/health"
-
---
