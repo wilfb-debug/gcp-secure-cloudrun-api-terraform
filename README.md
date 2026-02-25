@@ -127,7 +127,7 @@ Apply complete! Resources: 0 added, 0 changed, 0 destroyed.
 - Project(s) created and billing enabled
 
 ### Deploy / Verify
-```bash
+
 # Confirm active project + region
 gcloud config get-value project
 gcloud run services list --region europe-west2
