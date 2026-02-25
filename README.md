@@ -126,7 +126,7 @@ Apply complete! Resources: 0 added, 0 changed, 0 destroyed.
 ![IAM Binding](docs/screenshots/17-artifact-registry-iam-binding-success.png)
 
 ### Zero Drift Proof
-![Zero Drift](docs/screenshots/19-terraform-plan-zero-drift.png)
+![Zero Drift](docs/screenshots/19-terraform-pal-zero-drift.png)
 
 All screenshots located in:
 
