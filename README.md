@@ -103,6 +103,31 @@ Apply complete! Resources: 0 added, 0 changed, 0 destroyed.
 
 ## Screenshots
 
+---
+
+## Screenshots
+
+### 404 Before Fix
+![404 Before Fix](docs/screenshots/01-404-error-before-fix.png)
+
+### Wrong Project Context
+![Wrong Project](docs/screenshots/02-wrong-gcloud-project-context.png)
+
+### No Services In TF Project
+![No Services](docs/screenshots/03-no-services-in-tf-project.png)
+
+### Successful Deploy
+![Successful Deploy](docs/screenshots/05-successful-cloudrun-deploy.png)
+
+### HTTP 200 Success
+![HTTP 200](docs/screenshots/06-root-endpoint-200.png)
+
+### Artifact Registry IAM Binding Success
+![IAM Binding](docs/screenshots/17-artifact-registry-iam-binding-success.png)
+
+### Zero Drift Proof
+![Zero Drift](docs/screenshots/19-terraform-plan-zero-drift.png)
+
 All screenshots located in:
 
 docs/screenshots/
