@@ -62,6 +62,12 @@ Endpoints:
 
 ---
 
+## Architecture
+
+![Secure Multi-Project Cloud Run Deployment with Cross-Project Artifact Access](docs/diagrams/architecture.png)
+
+---
+
 ## Security Design
 
 - Cloud Run ingress set to internal-only
