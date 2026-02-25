@@ -143,7 +143,7 @@ curl -i "$URL/health"
 ---
 
 ## Key commands used during investigation
-```bash
+
 # Inspect service + revision + image
 gcloud run services describe sentinal-api --region europe-west2 --format="yaml(status.url,status.latestReadyRevisionName)"
 gcloud run revisions describe <REVISION> --region europe-west2 --format="yaml(spec.containers[0].image)"
