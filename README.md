@@ -6,6 +6,17 @@ Infrastructure managed with Terraform.
 
 ---
 
+## Outcomes
+
+- ✅ Cloud Run service deployed in europe-west2 via Terraform
+- ✅ Container image stored in Artifact Registry and pulled by Cloud Run runtime identity
+- ✅ Resolved 404 caused by wrong active project context
+- ✅ Resolved 403 image pull denied via repo-level Artifact Registry IAM binding
+- ✅ Verified endpoints return HTTP 200 (/ and /health)
+- ✅ Confirmed zero drift after fix (terraform plan shows no changes)
+  
+---
+
 ## Why This Project Matters
 
 This project simulates a real-world production issue in a multi-project GCP environment.
@@ -33,7 +44,7 @@ Images are built/pushed via **Cloud Build** into **Artifact Registry**.
 
 ## Project Info
 
-Service name: sentinal-api  
+Service name: sentinel-api  
 Region: europe-west2  
 Terraform project: gcp-secure-cloudrun-api-tf  
 Runtime: Cloud Run  
@@ -45,7 +56,7 @@ Endpoints:
 
 ---
 
-## Architecture Overview
+## Incidents & Fixes
 
 **Request flow**
 1. Client calls Cloud Run URL (`/` and `/health`)
@@ -87,7 +98,7 @@ Endpoints:
 
 ---
 
-# Debugging Incident 1 — 404 Error
+# Debugging Incident 1 — HTTP 404 Error
 
 ## Problem
 Cloud Run URL returned HTTP 404.
@@ -110,7 +121,7 @@ curl returned HTTP 200.
 
 ---
 
-# Debugging Incident 2 — Artifact Registry Permission Denied
+# Debugging Incident 2 — HTTP 403 Artifact Registry Permission Denied
 
 Symptom:
 Terraform apply failed with:
