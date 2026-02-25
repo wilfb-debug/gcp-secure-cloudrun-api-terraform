@@ -6,15 +6,18 @@ Infrastructure managed with Terraform.
 
 ---
 
-## Outcomes
+## Project Info
 
-- ✅ Cloud Run service deployed in europe-west2 via Terraform
-- ✅ Container image stored in Artifact Registry and pulled by Cloud Run runtime identity
-- ✅ Resolved 404 caused by wrong active project context
-- ✅ Resolved 403 image pull denied via repo-level Artifact Registry IAM binding
-- ✅ Verified endpoints return HTTP 200 (/ and /health)
-- ✅ Confirmed zero drift after fix (terraform plan shows no changes)
-  
+Service name: sentinel-api  
+Region: europe-west2  
+Terraform project: gcp-secure-cloudrun-api-tf  
+Runtime: Cloud Run  
+Framework: Flask + Gunicorn  
+
+Endpoints:
+- / → {"status":"Sentinal API running"}
+- /health → {"status":"ok"}
+
 ---
 
 ## Why This Project Matters
@@ -30,33 +33,28 @@ It demonstrates:
 
 ---
 
+## Outcomes
+
+- ✅ Cloud Run service deployed in europe-west2 via Terraform
+- ✅ Container image stored in Artifact Registry and pulled by Cloud Run runtime identity
+- ✅ Resolved 404 caused by wrong active project context
+- ✅ Resolved 403 image pull denied via repo-level Artifact Registry IAM binding
+- ✅ Verified endpoints return HTTP 200 (/ and /health)
+- ✅ Confirmed zero drift after fix (terraform plan shows no changes)
+  
+---
+
 ## What I built
 A secure containerized Flask API deployed on **Cloud Run** and managed with **Terraform**.  
 Images are built/pushed via **Cloud Build** into **Artifact Registry**.  
 
-## Skills demonstrated
-- GCP Cloud Run deployment + verification with `curl`
-- Terraform-managed infrastructure and **drift validation**
-- Debugging a real incident: **404 due to wrong project context**
-- Debugging a real incident: **cross-project Artifact Registry permissions**
-- IAM troubleshooting (service agents + repo-level IAM bindings)
-- Using `gcloud` to inspect services, revisions, images, and logs
-
-## Project Info
-
-Service name: sentinel-api  
-Region: europe-west2  
-Terraform project: gcp-secure-cloudrun-api-tf  
-Runtime: Cloud Run  
-Framework: Flask + Gunicorn  
-
-Endpoints:
-- / → {"status":"Sentinal API running"}
-- /health → {"status":"ok"}
-
 ---
 
-## Incidents & Fixes
+## Architecture
+
+![Secure Multi-Project Cloud Run Deployment with Cross-Project Artifact Access](docs/diagrams/architecture.png)
+
+---
 
 **Request flow**
 1. Client calls Cloud Run URL (`/` and `/health`)
@@ -73,12 +71,6 @@ Endpoints:
 
 ---
 
-## Architecture
-
-![Secure Multi-Project Cloud Run Deployment with Cross-Project Artifact Access](docs/diagrams/architecture.png)
-
----
-
 ## Security Design
 
 - Cloud Run ingress set to internal-only
@@ -88,15 +80,7 @@ Endpoints:
 
 ---
 
-## What This Project Demonstrates
-
-- Real-world cloud debugging
-- Cross-project IAM troubleshooting
-- Terraform state management
-- Cloud Run production deployment
-- Understanding of GCP service agents
-
----
+## Incidents & Fixes
 
 # Debugging Incident 1 — HTTP 404 Error
 
@@ -154,48 +138,6 @@ This confirms infrastructure state matches configuration and no manual console d
 
 ---
 
-## Security Decisions
-
-- Cloud Run ingress restricted (no public open deployment without verification)
-- Explicit service account usage
-- Repository-level IAM binding instead of overly broad project-level access
-- Terraform used to maintain reproducible, auditable infrastructure state
-
---- 
-
-## Future Improvements
-
-- Add CI/CD pipeline trigger (GitHub → Cloud Build)
-- Add IAM least-privilege policy refinement
-- Add monitoring + alerting via Cloud Monitoring
-- Add automated integration test after deployment
-- Add private ingress + VPC connector for internal-only service
-
----
-
-## Reproduce (high level)
-
-### Prereqs
-- gcloud authenticated
-- Terraform installed
-- Project(s) created and billing enabled
-
-### Deploy / Verify
-
-# Confirm active project + region
-gcloud config get-value project
-gcloud run services list --region europe-west2
-
-# Get service URL
-URL=$(gcloud run services describe sentinal-api --region europe-west2 --format="value(status.url)")
-echo "$URL"
-
-# Verify endpoints
-curl -i "$URL/"
-curl -i "$URL/health"
-
----
-
 ## Operational Validation & Investigation Commands
 
 The following commands were used to inspect runtime state, validate deployment, and diagnose IAM and image resolution issues.
@@ -215,6 +157,16 @@ gcloud run revisions describe <REVISION> \
 
 # Validate Terraform state alignment
 terraform plan
+
+---
+
+## Future Improvements
+
+- Add CI/CD pipeline trigger (GitHub → Cloud Build)
+- Add IAM least-privilege policy refinement
+- Add monitoring + alerting via Cloud Monitoring
+- Add automated integration test after deployment
+- Add private ingress + VPC connector for internal-only service
 
 ---
 
@@ -245,3 +197,46 @@ All screenshots located in:
 
 docs/screenshots/
 
+--- 
+
+## Skills demonstrated
+- GCP Cloud Run deployment + verification with `curl`
+- Terraform-managed infrastructure and **drift validation**
+- Debugging a real incident: **404 due to wrong project context**
+- Debugging a real incident: **cross-project Artifact Registry permissions**
+- IAM troubleshooting (service agents + repo-level IAM bindings)
+- Using `gcloud` to inspect services, revisions, images, and logs
+
+---
+
+## Security Decisions
+
+- Cloud Run ingress restricted (no public open deployment without verification)
+- Explicit service account usage
+- Repository-level IAM binding instead of overly broad project-level access
+- Terraform used to maintain reproducible, auditable infrastructure state
+
+--- 
+
+## Reproduce (high level)
+
+### Prereqs
+- gcloud authenticated
+- Terraform installed
+- Project(s) created and billing enabled
+
+### Deploy / Verify
+
+# Confirm active project + region
+gcloud config get-value project
+gcloud run services list --region europe-west2
+
+# Get service URL
+URL=$(gcloud run services describe sentinal-api --region europe-west2 --format="value(status.url)")
+echo "$URL"
+
+# Verify endpoints
+curl -i "$URL/"
+curl -i "$URL/health"
+
+--
