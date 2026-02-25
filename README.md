@@ -20,6 +20,35 @@ Endpoints:
 
 ---
 
+## Architecture Overview
+
+- Cloud Run (API runtime)
+- Artifact Registry (container storage)
+- Cloud Build (image build pipeline)
+- Terraform (infrastructure provisioning)
+- IAM (cross-project access control)
+
+---
+
+## Security Design
+
+- Cloud Run ingress set to internal-only
+- Service account explicitly defined
+- Cross-project Artifact Registry access controlled via IAM binding
+- No public unauthenticated access
+
+---
+
+## What This Project Demonstrates
+
+- Real-world cloud debugging
+- Cross-project IAM troubleshooting
+- Terraform state management
+- Cloud Run production deployment
+- Understanding of GCP service agents
+
+---
+
 # Debugging Incident 1 — 404 Error
 
 ## Problem
