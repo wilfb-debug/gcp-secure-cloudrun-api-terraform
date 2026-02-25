@@ -6,6 +6,18 @@ Infrastructure managed with Terraform.
 
 ---
 
+## What I built
+A secure containerized Flask API deployed on **Cloud Run** and managed with **Terraform**.  
+Images are built/pushed via **Cloud Build** into **Artifact Registry**.  
+
+## Skills demonstrated
+- GCP Cloud Run deployment + verification with `curl`
+- Terraform-managed infrastructure and **drift validation**
+- Debugging a real incident: **404 due to wrong project context**
+- Debugging a real incident: **cross-project Artifact Registry permissions**
+- IAM troubleshooting (service agents + repo-level IAM bindings)
+- Using `gcloud` to inspect services, revisions, images, and logs
+
 ## Project Info
 
 Service name: sentinal-api  
@@ -22,11 +34,18 @@ Endpoints:
 
 ## Architecture Overview
 
-- Cloud Run (API runtime)
-- Artifact Registry (container storage)
-- Cloud Build (image build pipeline)
-- Terraform (infrastructure provisioning)
-- IAM (cross-project access control)
+**Request flow**
+1. Client calls Cloud Run URL (`/` and `/health`)
+2. Cloud Run routes to the container (Flask + Gunicorn)
+3. Container image is pulled from Artifact Registry
+4. Terraform defines Cloud Run + IAM dependencies
+
+**Key GCP services**
+- Cloud Run (service: `sentinal-api`, region: `europe-west2`)
+- Artifact Registry (Docker repo storing the container image)
+- Cloud Build (build + push container image)
+- IAM (service accounts + Cloud Run/Artifact Registry access)
+- Terraform (infra as code + drift checks)
 
 ---
 
@@ -101,7 +120,42 @@ Apply complete! Resources: 0 added, 0 changed, 0 destroyed.
 
 ---
 
-## Screenshots
+## Reproduce (high level)
+### Prereqs
+- gcloud authenticated
+- Terraform installed
+- Project(s) created and billing enabled
+
+### Deploy / Verify
+```bash
+# Confirm active project + region
+gcloud config get-value project
+gcloud run services list --region europe-west2
+
+# Get service URL
+URL=$(gcloud run services describe sentinal-api --region europe-west2 --format="value(status.url)")
+echo "$URL"
+
+# Verify endpoints
+curl -i "$URL/"
+curl -i "$URL/health"
+
+---
+
+## Key commands used during investigation
+```bash
+# Inspect service + revision + image
+gcloud run services describe sentinal-api --region europe-west2 --format="yaml(status.url,status.latestReadyRevisionName)"
+gcloud run revisions describe <REVISION> --region europe-west2 --format="yaml(spec.containers[0].image)"
+
+# Logs (if needed)
+gcloud run services logs read sentinal-api --region europe-west2 --limit 50
+
+# Artifact Registry repos
+gcloud artifacts repositories list --project <PROJECT_ID> --location europe-west2
+
+# Terraform drift check
+terraform plan
 
 ---
 
