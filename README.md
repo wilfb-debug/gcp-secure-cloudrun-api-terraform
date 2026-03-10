@@ -4,6 +4,10 @@ Secure Flask API deployed to Google Cloud Run.
 Built with Cloud Build + Artifact Registry.
 Infrastructure managed with Terraform.
 
+## Architecture
+
+![Secure Multi-Project Cloud Run Deployment with Cross-Project Artifact Access](docs/diagrams/architecture.png)
+
 ---
 
 ## Project Info
@@ -47,12 +51,6 @@ It demonstrates:
 ## What I built
 A secure containerized Flask API deployed on **Cloud Run** and managed with **Terraform**.  
 Images are built/pushed via **Cloud Build** into **Artifact Registry**.  
-
----
-
-## Architecture
-
-![Secure Multi-Project Cloud Run Deployment with Cross-Project Artifact Access](docs/diagrams/architecture.png)
 
 ---
 
